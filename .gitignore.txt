@@ -1,5 +1,0 @@
-env
-node_modules
-server/env
-server/node_modules
-src/data
