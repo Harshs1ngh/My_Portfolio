@@ -12,22 +12,29 @@ export default function Contact() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setStatus("sending");
+
     try {
       const res = await fetch(
-        process.env.REACT_APP_API_URL
-          ? `${process.env.REACT_APP_API_URL}/api/contact`
-          : "http://localhost:5000/api/contact",
+        "https://my-portfolio-backend-5ugm.onrender.com/api/contact",
         {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+          },
           body: JSON.stringify(form),
         }
       );
-      if (res.ok) {
-        setStatus("success");
-        setForm({ name: "", email: "", message: "" });
-      } else throw new Error();
-    } catch {
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || "Failed to send message.");
+      }
+
+      setStatus("success");
+      setForm({ name: "", email: "", message: "" });
+    } catch (error) {
+      console.error("Contact form error:", error);
       setStatus("error");
     }
   };
@@ -52,7 +59,7 @@ export default function Contact() {
           fontSize: "clamp(56px, 9vw, 110px)",
           lineHeight: 0.88, letterSpacing: "2px",
           color: "var(--text)", marginBottom: 64,
-        }}>LET'S<br/>BUILD.</h2>
+        }}>LET'S<br />BUILD.</h2>
       </ScrollReveal>
 
       <div className="contact-grid">
